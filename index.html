@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>दीपावली विशेष अभियान - Navi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #54269B;
+            --deep-purple: #32105F;
+            --light-purple: #F3EDF9;
+            --gold: #E7BC53;
+            --white: #FFFFFF;
+            --dark-text: #17141D;
+            --secondary-text: #77717F;
+            --whatsapp-green: #20C968;
+            --border-color: #E2D9EE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #E8E9EB;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 0 24px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-logo { height: 26px; }
+        .header-title { font-size: 16px; font-weight: 700; color: var(--dark-text); }
+        .menu-icon { width: 24px; height: 24px; fill: var(--dark-text); }
+
+        /* Banner */
+        .banner {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Views */
+        .view-layer { display: none; padding: 24px 16px; flex: 1; animation: fadeIn 0.3s ease; }
+        .view-layer.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        .h1-main { font-size: 30px; font-weight: 700; color: var(--primary-purple); text-align: center; line-height: 1.3; margin-bottom: 12px; }
+        .h1-main span { color: var(--gold); display: block; }
+        .desc-text { font-size: 16px; color: var(--secondary-text); text-align: center; margin-bottom: 24px; line-height: 1.5; }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .btn:active { transform: scale(0.97); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-purple), var(--deep-purple));
+            color: var(--white);
+            box-shadow: 0 6px 16px rgba(84, 38, 155, 0.25);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(84, 38, 155, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(84, 38, 155, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(84, 38, 155, 0); }
+        }
+
+        .btn-whatsapp {
+            background: var(--whatsapp-green);
+            color: var(--white);
+            box-shadow: 0 6px 16px rgba(32, 201, 104, 0.25);
+        }
+
+        .icon-svg { width: 24px; height: 24px; fill: currentColor; }
+
+        /* Inputs */
+        .input-box {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            margin-bottom: 24px;
+            transition: border-color 0.2s;
+        }
+        .input-box:focus { border-color: var(--primary-purple); }
+
+        /* Engagement Bar */
+        .engagement-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .eng-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--secondary-text);
+        }
+        .eng-icon { width: 22px; height: 22px; fill: none; stroke: var(--secondary-text); stroke-width: 2; }
+        .eng-btn.liked .eng-icon { fill: var(--primary-purple); stroke: var(--primary-purple); }
+        .eng-btn.liked { color: var(--primary-purple); }
+
+        /* Comments Section */
+        .comments-wrap { background: var(--light-purple); padding: 24px 16px; }
+        .section-title { font-size: 18px; font-weight: 700; color: var(--dark-text); margin-bottom: 20px; }
+        .comment-card { display: flex; gap: 12px; margin-bottom: 20px; }
+        .dp-img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+        .comment-content { flex: 1; }
+        .bubble { background: var(--white); padding: 14px 16px; border-radius: 0 16px 16px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+        .c-name { font-size: 16px; font-weight: 700; color: var(--dark-text); margin-bottom: 4px; }
+        .c-text { font-size: 15px; color: var(--secondary-text); line-height: 1.4; }
+
+        /* Progress & Tasks */
+        .task-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+        
+        .task-heading {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-purple);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; color: var(--dark-text); margin-bottom: 10px; }
+        .progress-track { width: 100%; height: 10px; background: var(--light-purple); border-radius: 5px; overflow: hidden; margin-bottom: 20px; }
+        .progress-fill { height: 100%; width: 0%; background: var(--primary-purple); transition: width 0.4s ease; }
+        .progress-fill.completed { background: var(--whatsapp-green); }
+
+        /* Loader */
+        .loader-circle {
+            width: 50px; height: 50px;
+            border: 4px solid var(--light-purple);
+            border-top: 4px solid var(--primary-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- HEADER -->
+    <header>
+        <img src="https://i.ibb.co/mC6G0S6y/77820f8ef203724ebb9c0298393bced5.jpg" alt="Navi Logo" class="header-logo">
+        <div class="header-title">दीपावली विशेष अभियान - Navi</div>
+        <svg class="menu-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+    </header>
+
+    <img src="https://i.ibb.co/39LJp4G9/1793637061146.png" class="banner" alt="Diwali Banner">
+
+    <!-- PAGE 01: HOMEPAGE -->
+    <main id="page-home" class="view-layer active">
+        <h1 class="h1-main">दिवाली मनाएँ! <span>₹2,000 नकद पाएँ!</span></h1>
+        <p class="desc-text">आप सभी को दीपावली की हार्दिक शुभकामनाएँ! सभी के लिए ₹2,000 का नकद इनाम उपलब्ध है!</p>
+        <button class="btn btn-primary" onclick="initiateLoading('page-name')">
+            अभी देखें
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+    </main>
+
+    <!-- PAGE 02: NAME ENTRY -->
+    <main id="page-name" class="view-layer">
+        <h1 class="h1-main" style="font-size: 24px; color: var(--dark-text);">अपना नाम लिखें</h1>
+        <input type="text" id="participant-name" class="input-box" placeholder="अपना नाम यहाँ लिखें">
+        <button class="btn btn-primary" onclick="submitName()">आगे बढ़ें</button>
+    </main>
+
+    <!-- PAGE 03 & GLOBAL LOADING -->
+    <main id="page-loading" class="view-layer" style="text-align: center;">
+        <h1 class="h1-main" id="loader-title" style="font-size: 24px;">कृपया प्रतीक्षा करें</h1>
+        <p class="desc-text" id="loader-desc">सत्यापन जारी है...</p>
+        <div class="loader-circle"></div>
+        <div class="progress-header">
+            <span>प्रगति</span>
+            <span id="loading-pct">0%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="loading-bar"></div>
+        </div>
+    </main>
+
+    <!-- PAGE 04: TASK DASHBOARD -->
+    <main id="page-dashboard" class="view-layer">
+        
+        <!-- STEP 01 -->
+        <div class="task-card" id="card-step-01">
+            <div class="task-heading">
+                चरण 01
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--whatsapp-green)"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.98 1.001-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.886-9.885 9.886m8.511-18.396A11.96 11.96 0 0012.052 0C5.433 0 .045 5.388.042 12.006c0 2.118.552 4.185 1.603 6l-1.645 6 6.131-1.61c1.748.955 3.738 1.458 5.753 1.459h.005c6.618 0 12.007-5.388 12.01-12.007a12.01 12.01 0 00-3.338-8.503z"/></svg>
+            </div>
+            <p class="desc-text" style="text-align: left;">इस व्हॉट्सऐप बटन से अपने किन्हीं 5 लोगों को भेजे और टास्क पूर्ण करे</p>
+            
+            <div class="progress-header">
+                <span id="step1-status-text">प्रगति</span>
+                <span id="step1-count">0/5</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="step1-bar"></div>
+            </div>
+
+            <button class="btn btn-whatsapp" id="btn-share" onclick="handleWebsiteShare()">
+                <svg class="icon-svg" viewBox="0 0 24 24"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                WhatsApp पर साझा करें
+            </button>
+        </div>
+
+        <!-- STRICT CONDITIONAL INJECTION POINT: STEP 02 -->
+        <!-- Step 02 is completely absent from the DOM until Step 01 completes -->
+        <div id="step02-injection-point"></div>
+
+    </main>
+
+    <!-- PAGE 05: FINAL STATUS -->
+    <main id="page-final" class="view-layer" style="text-align: center;">
+        <div class="task-card" style="border-color: var(--gold); background: #FCFAEF;">
+            <h1 class="h1-main" style="font-size: 28px;">बधाई हो आपको <br><span>₹2000 का इनाम मिला</span></h1>
+            <p class="desc-text" style="color: var(--primary-purple); font-weight: 600;">इनाम आपके खाते में सफलतापूर्वक भेज दिया गया है।</p>
+            <div class="progress-track" style="height: 12px; margin-top: 20px;">
+                <div class="progress-fill completed" style="width: 100%;"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- GLOBAL ENGAGEMENT -->
+    <div class="engagement-bar">
+        <div class="eng-btn" id="btn-like" onclick="toggleLike()">
+            <svg class="eng-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>पसंद करें</span>
+            <span id="count-like">1428</span>
+        </div>
+        <div class="eng-btn" onclick="submitComment()">
+            <svg class="eng-icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>टिप्पणी करें</span>
+            <span id="count-comment">185</span>
+        </div>
+    </div>
+
+    <!-- GLOBAL COMMENTS -->
+    <div class="comments-wrap">
+        <h2 class="section-title">लोगों की प्रतिक्रियाएँ</h2>
+        
+        <div class="comment-card">
+            <img src="https://i.ibb.co/tMzSWVfp/photo-1635097700930-682d82152509.jpg" class="dp-img" alt="Narender Yadav">
+            <div class="comment-content">
+                <div class="bubble">
+                    <div class="c-name">Narender Yadav</div>
+                    <div class="c-text">mujhe sach me mile thank you navi</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comment-card">
+            <img src="https://i.ibb.co/q3XtFNxK/photo-1785613231743-2b338cc6434c.jpg" class="dp-img" alt="Suresh Choudhary">
+            <div class="comment-content">
+                <div class="bubble">
+                    <div class="c-name">Suresh Choudhary</div>
+                    <div class="c-text">mera to richarge plan ho gya 😘</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comment-card">
+            <img src="https://i.ibb.co/Z6tQ4YZF/premium-photo-1682089810582-f7b200217b67.jpg" class="dp-img" alt="Sangeeta Sharma">
+            <div class="comment-content">
+                <div class="bubble">
+                    <div class="c-name">Sangeeta Sharma</div>
+                    <div class="c-text">maine bhi dawnload kiya aur turant mil gye</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // System State Data
+    const appState = {
+        userName: '',
+        uniqueRefCode: 'U_' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+        verifiedReferrals: 0,
+        likes: 1428,
+        comments: 185,
+        isLiked: false
+    };
+
+    // Navigation Router
+    function navigate(viewId) {
+        document.querySelectorAll('.view-layer').forEach(el => el.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Name Validation
+    function submitName() {
+        const input = document.getElementById('participant-name').value.trim();
+        if (input.length < 2) {
+            alert('कृपया अपना सही नाम दर्ज करें।');
+            return;
+        }
+        appState.userName = input;
+        initiateLoading('page-dashboard');
+    }
+
+    // 8-Second Loader
+    function initiateLoading(targetView) {
+        navigate('page-loading');
+        
+        const bar = document.getElementById('loading-bar');
+        const pct = document.getElementById('loading-pct');
+        let progress = 0;
+        
+        // 8000ms / 100 steps = 80ms interval
+        const timer = setInterval(() => {
+            progress += 1;
+            bar.style.width = `${progress}%`;
+            pct.innerText = `${progress}%`;
+
+            if (progress >= 100) {
+                clearInterval(timer);
+                setTimeout(() => navigate(targetView), 300);
+            }
+        }, 80);
+    }
+
+    // Like System
+    function toggleLike() {
+        const btn = document.getElementById('btn-like');
+        const count = document.getElementById('count-like');
+        
+        appState.isLiked = !appState.isLiked;
+        if(appState.isLiked) {
+            appState.likes++;
+            btn.classList.add('liked');
+        } else {
+            appState.likes--;
+            btn.classList.remove('liked');
+        }
+        count.innerText = appState.likes;
+    }
+
+    // Comment System (Private Submission Simulation)
+    function submitComment() {
+        const commentText = prompt('अपनी टिप्पणी यहाँ लिखें (यह निजी रहेगी):');
+        if(commentText && commentText.trim().length > 0) {
+            appState.comments++;
+            document.getElementById('count-comment').innerText = appState.comments;
+            alert('आपकी टिप्पणी सुरक्षित रूप से दर्ज कर ली गई है।'); // Confirmation
+        }
+    }
+
+    // STEP 01 - STRICT WEBSITE SHARING ONLY
+    function handleWebsiteShare() {
+        // LINK 1: The website's own referral URL. NEVER the Navi app URL.
+        const websiteDomain = window.location.origin + window.location.pathname;
+        const myReferralLink = `${websiteDomain}?ref=${appState.uniqueRefCode}`;
+        const messageText = `Mujhe laga tha fake hai 😂 par sach me ₹2,000 mil gaye, tum log bhi try karo! ${myReferralLink}`;
+        
+        window.open(`https://wa.me/?text=${encodeURIComponent(messageText)}`, '_blank');
+
+        // Simulate backend verifying unique visits
+        simulateBackendVerification();
+    }
+
+    function simulateBackendVerification() {
+        // Mock server delay
+        setTimeout(() => {
+            if (appState.verifiedReferrals < 5) {
+                appState.verifiedReferrals++;
+                updateStep01Progress();
+                
+                if (appState.verifiedReferrals === 5) {
+                    unlockStep02();
+                }
+            }
+        }, 2000);
+    }
+
+    function updateStep01Progress() {
+        document.getElementById('step1-count').innerText = `${appState.verifiedReferrals}/5`;
+        const percentage = (appState.verifiedReferrals / 5) * 100;
+        document.getElementById('step1-bar').style.width = `${percentage}%`;
+    }
+
+    // STRICT CONDITIONAL RENDERING - STEP 02
+    function unlockStep02() {
+        // 1. Mark Step 01 Completed
+        document.getElementById('step1-status-text').innerText = 'चरण 01 पूर्ण';
+        document.getElementById('step1-status-text').style.color = 'var(--whatsapp-green)';
+        document.getElementById('step1-count').style.color = 'var(--whatsapp-green)';
+        document.getElementById('step1-bar').classList.add('completed');
+        document.getElementById('btn-share').style.display = 'none';
+
+        // 2. Inject Step 02 DOM. (It did not exist prior to this exact function call).
+        const injectionPoint = document.getElementById('step02-injection-point');
+        injectionPoint.innerHTML = `
+            <div class="task-card" style="animation: slideDown 0.5s ease; border-color: var(--primary-purple);">
+                <div class="task-heading">चरण 02</div>
+                <p class="desc-text" style="text-align: left; margin-bottom: 24px;">दिये हुए नवी यू पी आई को डाउनलोड करे मोबाइल नंबर रजिस्टर करे और अपने किसी भी दोस्त को 1₹ भेजे और आप जीत जाएंगे ₹2000</p>
+                
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <img src="https://i.ibb.co/mC6G0S6y/77820f8ef203724ebb9c0298393bced5.jpg" alt="Navi Logo" style="width: 72px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                </div>
+
+                <!-- LINK 2: NAVI REFERRAL URL STRICTLY HERE -->
+                <button class="btn btn-primary" onclick="proceedToFinal()">
+                    Navi UPI DOWNLOAD NOW
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </div>
+        `;
+    }
+
+    function proceedToFinal() {
+        // LINK 2 execution
+        window.open('https://r.navi.com/30j74C', '_blank');
+        
+        // Final Backend simulation
+        setTimeout(() => {
+            document.getElementById('loader-title').innerText = 'अंतिम सत्यापन';
+            document.getElementById('loader-desc').innerText = 'इनाम की पुष्टि की जा रही है...';
+            initiateLoading('page-final');
+        }, 1500);
+    }
+</script>
+</body>
+</html>
